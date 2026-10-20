@@ -17,9 +17,11 @@ concurrency:
 jobs:
   gerar:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -28,6 +30,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tv.m3u epg.xml.gz
-          git diff --cached --quiet || git commit -m "Atualizar lista e guia"
-          git push
+          git add tv.m3u epg.xml.gz estado.txt
+          git diff --cached --quiet && exit 0
+          # Se o último commit também foi uma atualização automática, substitui-o:
+          # assim o histórico não cresce ~10 MB por dia com guias antigos.
+          if [ "$(git log -1 --format=%an)" = "github-actions[bot]" ] && git rev-parse -q --verify HEAD~1 >/dev/null; then
+            git reset --soft HEAD~1
+            git commit -q -m "Atualizar lista e guia"
+            git push --force-with-lease
+          else
+            git commit -q -m "Atualizar lista e guia"
+            git push
+          fi
