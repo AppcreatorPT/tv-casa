@@ -17,7 +17,7 @@ O estado da última atualização está em [`estado.txt`](estado.txt).
 | 🇺🇸 EUA | 200 |
 | 🇬🇧 Reino Unido | 400 |
 | 🇫🇷 França | 500 |
-| 🎬 Filmes · Português / 📺 Séries · Português | 600 / 700 |
+| 🎬 Filmes · Brasil / 📺 Séries · Brasil | 600 / 700 |
 | 🎬 Filmes · Inglês / 📺 Séries · Inglês | 800 / 900 |
 | 🎬 Filmes · Francês / 📺 Séries · Francês | 1200 / 1300 |
 | 🍥 Anime · 🧸 Infantil · 🌍 Documentários | 1400 · 1500 · 1600 |
@@ -29,7 +29,9 @@ Os favoritos têm número fixo. Nos outros grupos, um canal que morre só mexe n
 
 - [iptv-org](https://github.com/iptv-org/iptv): canais públicos de Portugal, EUA, Reino Unido e França.
   Dos países estrangeiros só entram canais com guia de TV.
-- Pluto TV (Brasil, EUA, Reino Unido, França): canais temáticos grátis. Os de "Português" são dobrados (pt-BR).
+- Pluto TV (Brasil, EUA, Reino Unido, França): canais temáticos grátis. Os do Brasil são dobrados em pt-BR.
+  Não há Pluto, Samsung TV Plus ou Plex para Portugal.
+- Canais oficiais extra de Portugal (RTP África, RTP Mundo, TVI Internacional): lista `EXTRA` em `gerar.py`.
 - [epgshare01](https://epgshare01.online): guia dos canais dos países.
 
 ## Como funciona

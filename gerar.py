@@ -33,13 +33,15 @@ NOW = dt.datetime.now(dt.timezone.utc)
 GROUPS = [
     ("⭐ Favoritos", 1),
     ("🇵🇹 Portugal", 100), ("🇺🇸 EUA", 200), ("🇬🇧 Reino Unido", 400), ("🇫🇷 França", 500),
-    ("🎬 Filmes · Português", 600), ("📺 Séries · Português", 700),
+    ("🎬 Filmes · Brasil", 600), ("📺 Séries · Brasil", 700),
     ("🎬 Filmes · Inglês", 800), ("📺 Séries · Inglês", 900),
     ("🎬 Filmes · Francês", 1200), ("📺 Séries · Francês", 1300),
     ("🍥 Anime", 1400), ("🧸 Infantil", 1500), ("🌍 Documentários", 1600),
     ("⚽ Desporto", 1700), ("📰 Notícias", 1800), ("🎵 Música", 1900),
 ]
 GROUP_NAMES = [g for g, _ in GROUPS]
+# Nomes antigos de grupos (para ler a lista anterior quando uma fonte falha).
+RENAMED = {"🎬 Filmes · Português": "🎬 Filmes · Brasil", "📺 Séries · Português": "📺 Séries · Brasil"}
 
 # Favoritos: o número é a posição nesta lista (RTP 1 é sempre o 1). Os que não existirem ficam por usar.
 FAVORITOS = [
@@ -52,7 +54,8 @@ FAVORITOS = [
 # ---------- Canais normais por país (iptv-org) ----------
 THEME_ORDER = ["General", "News", "Sports", "Movies", "Series", "Entertainment", "Comedy",
                "Documentary", "Lifestyle", "Kids", "Animation", "Family", "Music", "Undefined"]
-KEEP_CATS = set(THEME_ORDER) | {"Culture", "Business", "Science", "Travel", "Cooking", "Outdoor", "Classic"}
+KEEP_CATS = set(THEME_ORDER) | {"Culture", "Business", "Science", "Travel", "Cooking", "Outdoor", "Classic",
+                                "Legislative"}
 
 COUNTRIES = [
     # (código iptv-org, grupo, ficheiros de guia epgshare01, exige guia?)
@@ -63,7 +66,7 @@ COUNTRIES = [
 ]
 # Nomes a esconder: religiosos, compras, regionais, outras línguas.
 SKIP = re.compile(
-    r"Mana |Kuriakos|Angel TV|Trailers|Radio Sines|ADB TV|\bKTO\b|MCM Pop|AXN White"
+    r"Mana |Kuriakos (TV|Music)|Angel TV|Trailers|Radio Sines|ADB TV|\bKTO\b|MCM Pop|AXN White"
     r"|Espa[nñ]ol|Deportes|Latino|Univision|Estrella|TUDN|De Pelicula|Tlnovelas|Mediaset|MBC America"
     r"|Aaj Tak|Brit Asia|Deen TV|Takbeer|Utsav|\bZee\b|Nollywood|Africa 24|Trace (Africa|Caribbean|Latina|Gospel)"
     r"|\bTBN\b|\bTCT\b|Positiv|Impact Network|AMG TV|Hobby Maker|TV Warehouse|\bTV One\b"
@@ -84,6 +87,18 @@ PRETTY = {
     "RTP Memoria": "RTP Memória", "RTP Acores": "RTP Açores", "RTP Noticias": "RTP Notícias",
     "SIC Noticias": "SIC Notícias", "TVI Ficcao": "TVI Ficção", "SIC Alta Definicao": "SIC Alta Definição",
     "Euronews Portuguese": "Euronews Português", "FIFA+ Portuguese": "FIFA+ Português",
+    "RTP Africa": "RTP África",
+}
+# Canais oficiais grátis de Portugal que não estão na lista do país no iptv-org.
+EXTRA = {
+    "pt": """#EXTM3U
+#EXTINF:-1 tvg-id="RTPAfrica.pt@SD" tvg-logo="https://cdn-images.rtp.pt/common/img/channels/logos/color/horizontal/rtpafrica_2026.png" http-user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0" group-title="General",RTP Africa
+https://streaming-live.rtp.pt/liverepeater/smil:rtpafrica.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="RTPMundo.pt@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/RTP_Mundo.svg/1920px-RTP_Mundo.svg.png" http-user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0" group-title="General",RTP Mundo
+https://streaming-live.rtp.pt/liverepeater/smil:rtpi.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="TVIInternacional.pt@SD" tvg-logo="https://cdn.iol.pt/img/logostvi/branco/tviinternacional.png" group-title="General",TVI Internacional
+https://raw.githubusercontent.com/thomraider12/canaistvpt/main/m3u8s/tviint.m3u8
+""",
 }
 
 
@@ -175,6 +190,7 @@ def load_epg(files):
 
 def country_channels(code, group, epg_ids, need_epg):
     items = parse_m3u(fetch(f"https://iptv-org.github.io/iptv/countries/{code}.m3u").decode())
+    items += parse_m3u(EXTRA.get(code, ""))
     # Juntar as várias versões de cada canal (HD, SD, 720p...) pela base do tvg-id.
     variants = {}
     for ch in items:
@@ -213,7 +229,8 @@ def country_channels(code, group, epg_ids, need_epg):
 
 
 # ---------- Pluto TV (canais temáticos grátis) ----------
-PT_FILMES, PT_SERIES = "🎬 Filmes · Português", "📺 Séries · Português"
+# Os canais do Pluto Brasil são dobrados em português do Brasil.
+PT_FILMES, PT_SERIES = "🎬 Filmes · Brasil", "📺 Séries · Brasil"
 EN_FILMES, EN_SERIES = "🎬 Filmes · Inglês", "📺 Séries · Inglês"
 FR_FILMES, FR_SERIES = "🎬 Filmes · Francês", "📺 Séries · Francês"
 PLUTO = [
@@ -291,7 +308,8 @@ def previous_entries():
         a = ch["attrs"]
         if a.get("group-title") == "⭐ Favoritos":
             continue
-        out.append(dict(group=a.get("group-title"), name=ch["name"], url=ch["url"], tvg=a.get("tvg-id", ""),
+        group = RENAMED.get(a.get("group-title"), a.get("group-title"))
+        out.append(dict(group=group, name=ch["name"], url=ch["url"], tvg=a.get("tvg-id", ""),
                         logo=a.get("tvg-logo", ""), opts=ch["opts"], order=0, src=a.get("x-src", "")))
     return out
 

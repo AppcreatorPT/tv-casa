@@ -1,13 +1,13 @@
-Atualizado: 2026-10-27 05:13 UTC
-Canais: 752 (com guia: 747), favoritos: 26
+Atualizado: 2026-10-27 10:14 UTC
+Canais: 759 (com guia: 751), favoritos: 26
   ⭐ Favoritos: 26
-  🇵🇹 Portugal: 22
+  🇵🇹 Portugal: 29
   🇺🇸 EUA: 96
-  🇬🇧 Reino Unido: 21
+  🇬🇧 Reino Unido: 20
   🇫🇷 França: 33
-  🎬 Filmes · Português: 27
-  📺 Séries · Português: 64
-  🎬 Filmes · Inglês: 49
+  🎬 Filmes · Brasil: 27
+  📺 Séries · Brasil: 64
+  🎬 Filmes · Inglês: 50
   📺 Séries · Inglês: 173
   🎬 Filmes · Francês: 12
   📺 Séries · Francês: 70
