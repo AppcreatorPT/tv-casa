@@ -1,10 +1,10 @@
-Atualizado: 2026-10-20 02:48 UTC
-Canais: 715 (com guia: 710), favoritos: 23
-  ⭐ Favoritos: 23
-  🇵🇹 Portugal: 21
-  🇺🇸 EUA: 63
-  🇬🇧 Reino Unido: 20
-  🇫🇷 França: 32
+Atualizado: 2026-10-27 05:13 UTC
+Canais: 752 (com guia: 747), favoritos: 26
+  ⭐ Favoritos: 26
+  🇵🇹 Portugal: 22
+  🇺🇸 EUA: 96
+  🇬🇧 Reino Unido: 21
+  🇫🇷 França: 33
   🎬 Filmes · Português: 27
   📺 Séries · Português: 64
   🎬 Filmes · Inglês: 49
@@ -15,5 +15,5 @@ Canais: 715 (com guia: 710), favoritos: 23
   🧸 Infantil: 19
   🌍 Documentários: 66
   ⚽ Desporto: 37
-  📰 Notícias: 26
+  📰 Notícias: 27
   🎵 Música: 15
